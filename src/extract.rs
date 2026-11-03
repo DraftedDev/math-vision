@@ -1,3 +1,4 @@
+use image::{DynamicImage, imageops::contrast};
 use oar_ocr::prelude::*;
 use pdfium_render::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -21,16 +22,18 @@ pub fn extract_document_items(
 
     let render_cfg = PdfRenderConfig::default()
         .use_lcd_text_rendering(true)
-        .disable_native_text_rendering(true);
+        .disable_native_text_rendering(true)
+        .scale_page_by_factor(2.0);
 
     for page_idx in 0..page_count {
         let page = document.pages().get(page_idx)?;
         let page_width = page.width().value;
         let page_height = page.height().value;
 
-        let img = page.render_with_config(&render_cfg)?.as_image()?;
+        let mut img = page.render_with_config(&render_cfg)?.as_image()?;
+        img = DynamicImage::ImageRgb8(contrast(&img.to_rgb8(), 25.0));
 
-        let temp_filename = format!("temp_page_{}.jpg", page_idx);
+        let temp_filename = format!("temp_page_{}.png", page_idx);
         img.save(&temp_filename)?;
 
         let structure_result = structure.predict(&temp_filename)?;

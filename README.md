@@ -6,7 +6,7 @@
 
 **Math-Vision** is a command-line-interface for analyzing and correcting hand-written mathematical sheets.
 
-It does this by converting a PDF to an image and sending it to an `ollama` VLM.
+It does this by converting a PDF to an image and sending it to an OCR.
 
 After extracting data out of the image, errors and corrections are drawn to an output PDF (a copy of the input PDF).
 
