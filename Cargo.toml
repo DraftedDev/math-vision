@@ -4,17 +4,18 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-tokio = { version = "1.54.1", features = ["rt-multi-thread", "net", "fs"] }
+pdfium-render = "0.9.5"
+image = { version = "0.25.10", default-features = false, features = ["rayon", "png"] }
+imageproc = "0.27.0"
+anyhow = "1.0.104"
+tokio = { version = "1.54.1", features = ["rt-multi-thread", "net"] }
 log = "0.4.35"
 env_logger = "0.11.11"
 clap = { version = "4.6.7", features = ["derive"] }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"
-pdfium-render = "0.9.5"
-image = { version = "0.25.10", default-features = false, features = ["rayon", "png"] }
 base64 = "0.23.1"
 latex-rust = { version = "3.0.1", features = ["png"] }
-
+regex = "1.13.1"
 ollama-rs = "0.3.6"
-oar-ocr = { version = "0.10.2", features = ["auto-download"] }
 whatlang = "0.18.0"

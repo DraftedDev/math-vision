@@ -1,0 +1,1 @@
+{"url":"http://localhost:11434","model":"gemma4:e4b","prompt":"analyzer.txt","temp":0.1,"ctx":8192,"predict":8192,"top_p":1.0}

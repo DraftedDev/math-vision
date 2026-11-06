@@ -13,21 +13,26 @@ furnished to do so, subject to the following conditions:
    be included in all copies or substantial portions of the Software.
 
 2. ANTI-CHEATER RESTRICTIONS:
-   (a) Permitted Educational Use: The Software MAY be used for homework
-       assistance, step-by-step guidance, diagnostic feedback, and error
-       correction, provided the user exhibits a genuine, non-zero effort to
-       actually learn and understand the underlying concepts.
-   (b) Prohibited Academic Dishonesty: The Software SHALL NOT be used to
-       ghostwrite solutions, execute automated submission of graded
-       tasks, or facilitate cheating on any exam, quiz, test, or homework
-       assignment where the user simply copies outputs without educational
-       intent. No one likes cheaters.
+   (a) Permitted Educational & Fair Play Use: The Software MAY be used for homework
+       assistance, step-by-step guidance, diagnostic feedback, error
+       correction, or legitimate gameplay enhancement (e.g., custom HUDs, single-player mods),
+       provided the user exhibits a genuine, non-zero effort to actually learn the concepts
+       or play the game fairly.
+   (b) Prohibited Dishonesty & Exploitation: The Software SHALL NOT be used to
+       ghostwrite solutions, execute automated submission of graded tasks, facilitate
+       cheating on any exam, quiz, test, or homework assignment, OR to develop, run, or
+       distribute aimbots, wallhacks, macros, scripts, or cheats in any multiplayer video game.
+       No one likes cheaters.
 
 3. VIDEO GAME CHEATING RESTRICTIONS:
-   Exclusive Valorant Exemption: Notwithstanding Section 2(b), if the
-   Software is used for the express purpose of video game cheating, it
-   MAY ONLY be incorporated into cheats for Riot Games' Valorant (regardless
-   of how mathematically impossible or absurd that may be).
+   (a) Absolute Video Game Prohibition: Except as provided in Section 3(b), the Software
+       SHALL NOT be integrated into, compiled with, or executed alongside any software designed
+       to compromise competitive integrity in video games (including, but not limited to, FPS,
+       MOBA, Battle Royale, or MMORPG titles).
+   (b) Exclusive Valorant Exemption: Notwithstanding Section 2(b) and Section 3(a), if the
+       Software is used for the express purpose of video game cheating, it MAY ONLY be
+       incorporated into cheats for Riot Games' Valorant (regardless of how mathematically
+       impossible, absurd, or guaranteed to be instantly nuked by Riot Vanguard that may be).
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -35,5 +40,5 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE, NOR FOR ANY ACADEMIC EXPULSION, DETENTION, OR COMPETITIVE DE-RANKING
-RESULTING FROM ITS USE.
+SOFTWARE, NOR FOR ANY ACADEMIC EXPULSION, DETENTION, HARDWARE ID BAN, OR COMPETITIVE
+DE-RANKING RESULTING FROM ITS USE.

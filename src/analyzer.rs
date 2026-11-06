@@ -3,28 +3,7 @@ use ollama_rs::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::extract::ExtractedItem;
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct DocumentItem {
-    pub page: usize,
-    pub bbox_2d: [u32; 4], // [xmin, ymin, xmax, ymax]
-    pub language: String,
-    pub task: String,
-    pub error: Option<String>,
-    pub correction_latex: Option<String>,
-}
-
-#[derive(Debug, Clone)]
-pub struct AnalyzerConfig {
-    pub url: String,
-    pub model: String,
-    pub prompt: String,
-    pub temp: f32,
-    pub ctx: u64,
-    pub predict: i32,
-    pub top_p: f32,
-}
+use crate::{extractor::ExtractedItem, utils::Config};
 
 pub struct Analyzer {
     client: Ollama,
@@ -61,10 +40,6 @@ impl Analyzer {
                 .top_p(self.config.top_p),
         );
 
-        log::info!(
-            "Sending analysis request to Ollama text model '{}'...",
-            self.config.model
-        );
         let res = self
             .client
             .generate(req)
@@ -82,5 +57,42 @@ impl Analyzer {
 
         serde_json::from_str(clean_json)
             .expect("Failed to parse LLM output into DocumentItem array")
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct DocumentItem {
+    pub page: usize,
+    pub bbox_2d: [u32; 4], // [xmin, ymin, xmax, ymax]
+    pub language: String,
+    pub task: String,
+    pub error: Option<String>,
+    pub correction_latex: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AnalyzerConfig {
+    pub url: String,
+    pub model: String,
+    pub prompt: String,
+    pub temp: f32,
+    pub ctx: u64,
+    pub predict: i32,
+    pub top_p: f32,
+}
+
+impl Config for AnalyzerConfig {}
+
+impl Default for AnalyzerConfig {
+    fn default() -> Self {
+        Self {
+            url: "http://localhost:11434".to_string(),
+            model: "gemma4:e4b".to_string(),
+            prompt: "analyzer.txt".to_string(),
+            temp: 0.1,
+            ctx: 8192,
+            predict: 8192,
+            top_p: 1.0,
+        }
     }
 }

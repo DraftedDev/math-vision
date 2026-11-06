@@ -3,10 +3,11 @@ use log::LevelFilter;
 
 use crate::cli::Cli;
 
-mod analyze;
-mod annotate;
+mod analyzer;
 mod cli;
-mod extract;
+mod extractor;
+mod pdf;
+mod utils;
 
 fn main() {
     let cli = Cli::parse();

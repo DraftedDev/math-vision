@@ -1,32 +1,16 @@
 use std::path::Path;
 
-use crate::analyze::DocumentItem;
+use image::{DynamicImage, GenericImageView, GrayImage, imageops::FilterType};
+use imageproc::{contrast::stretch_contrast, filter::sharpen_gaussian};
 use latex_rust::{MathFont, PngOptions, latex_to_png};
-use pdfium_render::prelude::*;
+use pdfium_render::prelude::{
+    PdfColor, PdfDocument, PdfPageObjectCommon, PdfPageObjectsCommon, PdfPagePathObject, PdfPoints,
+    PdfRect, PdfRenderConfig,
+};
 
-fn wrap_text(text: &str, max_chars: usize) -> Vec<String> {
-    let mut lines = Vec::new();
-    for line in text.split('\n') {
-        let mut current_line = String::new();
-        for word in line.split_whitespace() {
-            if current_line.len() + word.len() + 1 > max_chars {
-                lines.push(current_line);
-                current_line = word.to_string();
-            } else {
-                if !current_line.is_empty() {
-                    current_line.push(' ');
-                }
-                current_line.push_str(word);
-            }
-        }
-        if !current_line.is_empty() {
-            lines.push(current_line);
-        }
-    }
-    lines
-}
+use crate::{analyzer::DocumentItem, utils::wrap_text};
 
-pub fn annotate_pdf_document(
+pub fn annotate_pdf(
     mut document: PdfDocument<'_>,
     output: impl AsRef<Path>,
     items: &[DocumentItem],
@@ -81,10 +65,8 @@ pub fn annotate_pdf_document(
                 )?;
                 page.objects_mut().add_path_object(rect_path)?;
 
-                // 2. Dynamically anchor margin callout vertically aligned with the top of the problem box
                 let mut current_y = ymax.min(page_height - 30.0);
 
-                // 3. Draw a clean leader line connecting the problem box to the margin note
                 let box_mid_y = (ymin + ymax) / 2.0;
                 let leader_path = PdfPagePathObject::new_line(
                     &document,
@@ -140,7 +122,6 @@ pub fn annotate_pdf_document(
                     )?;
                 }
             } else {
-                // Draw a subtle, clean green bounding box for fully correct student tasks
                 let green_rect = PdfPagePathObject::new_rect(
                     &document,
                     PdfRect::new(
@@ -160,4 +141,58 @@ pub fn annotate_pdf_document(
 
     document.save_to_file(&output)?;
     Ok(())
+}
+
+pub fn render_pdf(
+    document: &PdfDocument,
+    max_width: u32,
+    max_height: u32,
+) -> anyhow::Result<Vec<DynamicImage>> {
+    let render_cfg = PdfRenderConfig::default()
+        .use_lcd_text_rendering(true)
+        .disable_native_text_rendering(true)
+        .scale_page_by_factor(2.0);
+
+    document
+        .pages()
+        .iter()
+        .map(|page| {
+            let img = page.render_with_config(&render_cfg)?.as_image()?;
+            let processed = process_img(img, max_width, max_height)?;
+            let optimized = optimize_img(processed);
+
+            Ok(optimize_img(optimized))
+        })
+        .collect::<anyhow::Result<Vec<_>>>()
+}
+
+fn optimize_img(img: DynamicImage) -> DynamicImage {
+    let gray_img: GrayImage = img.to_luma8();
+    let stretched = stretch_contrast(&gray_img, 30, 220, 0, 255);
+    let sharpened: GrayImage = sharpen_gaussian(&stretched, 1.0, 1.5);
+
+    DynamicImage::ImageLuma8(sharpened)
+}
+
+fn process_img(img: DynamicImage, max_width: u32, max_height: u32) -> anyhow::Result<DynamicImage> {
+    let (width, height) = img.dimensions();
+    let width_f = width as f32;
+    let height_f = height as f32;
+    let max_w_f = max_width as f32;
+    let max_h_f = max_height as f32;
+
+    let processed_img = if width_f > max_w_f || height_f > max_h_f {
+        let scale_x = max_w_f / width_f;
+        let scale_y = max_h_f / height_f;
+        let scale = scale_x.min(scale_y);
+
+        let new_width = (width_f * scale) as u32;
+        let new_height = (height_f * scale) as u32;
+
+        img.resize_exact(new_width, new_height, FilterType::Lanczos3)
+    } else {
+        img
+    };
+
+    Ok(processed_img)
 }
